@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: a19dfc251ecab464aa8733f99ba7cc3c
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Overpass
+  fontNames:
+  - Overpass
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b0b58cf1fae74044885b66194e090246, type: 3}
+  - {fileID: 12800000, guid: 204891126da59e74abf9536d398a51a4, type: 3}
+  - {fileID: 12800000, guid: 60dc2b221a189504d939876b287e4ef9, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,26 @@
+{
+  "random": random(1, 100),
+  "random float": randomFloat(1, 100, 3),
+  "bool": randomBool(),
+  "date": date('Y-m-d', '1980-01-01', '2000-01-15'),
+  "regEx": regex(/hello+ (world|to you)/),
+  "enum": choice('json', 'generator', 'online'),
+  "firstname": firstname(),
+  "lastname": lastname(),
+  "city": city(),
+  "country": country(),
+  "countryCode": countryCode(),
+  "email uses current data": function () {
+    	return this.firstname + '.' + this.lastname + '@gmail.com'; 
+  },
+  "email from expression": expression("{{firstname}}.{{lastname}}@yopmail.com"),
+  "array": repeat(5, firstname()),
+  "array of objects": 
+	  repeat(3, {
+			"index": index(),
+			"index start at 5": index(5)
+      }),
+  "{{firstname()}}": {
+    "age": random(18, 100)
+  }
+}

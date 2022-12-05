@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81413c0f8ddc00847b3c5ba8341294be, type: 3}
+  m_Name: level 10
+  m_EditorClassIdentifier: 
+  name: LEVEL 10
+  level: 10
+  health: 10000
+  price: 2000
+  nextPrice: 0
+  isTile: 1
+  prefab: {fileID: 1448623862845159386, guid: 034b5f6dc41783146ac4e94d628a8f05, type: 3}
