@@ -192,6 +192,10 @@ public class TileMechanics : MonoBehaviour
             hasWonTheGame = true;
             canvas.GetComponent<MenuMechanics>().EndGame(true);
         }
+
+        if (GameManager.gameMode == 2) // belangrijk
+            return;
+
         if (Bossmode == false)
         {
             if (aantalTilesMaxLvl == 25)

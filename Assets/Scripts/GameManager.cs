@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     public static bool postProcessingEnabled;
     public static bool fullscreenEnabled;
     public static int selectedResolution;
-    //public static string skinCode;
 
     public static bool initDone = false;
 
@@ -34,6 +33,11 @@ public class GameManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    private void Update()
+    {
+        //cheatsEnabled = true; <-cheats test
     }
 
 }

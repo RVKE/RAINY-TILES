@@ -587,9 +587,9 @@ public class MenuMechanics : MonoBehaviour
         FindObjectOfType<AudioManager>().Play("MoveClick");
     }
 
-    public void ToggleCheats(bool toggle)
+    public void ToggleCheats()
     {
-        GameManager.cheatsEnabled = toggle;
+        GameManager.cheatsEnabled = !GameManager.cheatsEnabled;
         FindObjectOfType<AudioManager>().Play("MoveClick");
     }
 

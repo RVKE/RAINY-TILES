@@ -13,7 +13,7 @@ public class LevelMechanics : MonoBehaviour
     public List<GameObject> Tiles;
     public Text LevelTEXT;
     public int Levels;
-    public float Downtime;
+    public float downTime;
     public float factor;
     public float Rains;
     public float TimeBetweenRains;
@@ -22,6 +22,7 @@ public class LevelMechanics : MonoBehaviour
     public float rainTimeRandomness;
     public float downTimeBonusLengthMultiplier;
     public float moneyGiveWaitTimeMultiplier;
+    public float coolDownPeriod; // 7.1f
 
     public Stopwatch timer;
 
@@ -45,32 +46,68 @@ public class LevelMechanics : MonoBehaviour
 
     public void StartGame() // <--- START DE GAME
     {
-        player.GetComponent<Player>().buildingEnabled = true;
-        canvas.GetComponent<MenuMechanics>().shopEnabled = true;
-        canvas.GetComponent<MenuMechanics>().ActivateCoinUI(false);
-        canvas.GetComponent<MenuMechanics>().ActivateHealthUI(false);
-        canvas.GetComponent<MenuMechanics>().ActivateLevelUI(false);
-        canvas.GetComponent<MenuMechanics>().ActivatePauseButtonUI(false);
-        canvas.GetComponent<MenuMechanics>().ActivateShopButtonUI(false);
-        canvas.GetComponent<MenuMechanics>().ActivateXPUI(false);
-        player.GetComponent<Player>().movementEnabled = true;
-        player.GetComponent<Player>().setPosition = true;
-        GetComponent<TileMechanics>().enableMouseOverTileMaterial = true;
+        if (GameManager.gameMode == 1) //CASUAL GAME
+        {
+            player.GetComponent<Player>().buildingEnabled = true;
+            canvas.GetComponent<MenuMechanics>().shopEnabled = true;
+            canvas.GetComponent<MenuMechanics>().ActivateCoinUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateHealthUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateLevelUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivatePauseButtonUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateShopButtonUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateXPUI(false);
+            player.GetComponent<Player>().movementEnabled = true;
+            player.GetComponent<Player>().setPosition = true;
+            GetComponent<TileMechanics>().enableMouseOverTileMaterial = true;
 
-        gameStarted = true;
-        disableRain = false;
-        GetComponent<MoneyMechanics>().spawnItems = true;
+            gameStarted = true;
+            disableRain = false;
+            GetComponent<MoneyMechanics>().spawnItems = true;
 
-        timer = new Stopwatch();
+            timer = new Stopwatch();
 
-        timer.Start(); //start de timer;
+            timer.Start(); //start de timer;
 
-        if (GameManager.showElapsedTime)
+            if (GameManager.showElapsedTime)
+                canvas.GetComponent<MenuMechanics>().ActivateTimerUI(true);
+
+            player.GetComponent<Player>().allowSmoothAppear = true;
+
+            StartCoroutine(Wait());
+        }
+        if (GameManager.gameMode == 2)
+        {
+            //belangrijk
+
+            player.GetComponent<Player>().buildingEnabled = true;
+            canvas.GetComponent<MenuMechanics>().shopEnabled = true;
+            canvas.GetComponent<MenuMechanics>().ActivateCoinUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateHealthUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateLevelUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivatePauseButtonUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateShopButtonUI(false);
+            canvas.GetComponent<MenuMechanics>().ActivateXPUI(false);
+            player.GetComponent<Player>().movementEnabled = true;
+            player.GetComponent<Player>().setPosition = true;
+            GetComponent<TileMechanics>().enableMouseOverTileMaterial = true;
+
+            gameStarted = true; 
+            disableRain = false;
+            GetComponent<MoneyMechanics>().spawnItems = true;
+
+            GameManager.showElapsedTime = true;
+
+            timer = new Stopwatch();
+
+            timer.Start(); //start de timer;
+
             canvas.GetComponent<MenuMechanics>().ActivateTimerUI(true);
 
-        player.GetComponent<Player>().allowSmoothAppear = true;
+            player.GetComponent<Player>().allowSmoothAppear = true;
 
-        StartCoroutine(Wait());
+            StartCoroutine(Wait()); //
+        }
+
     }
 
     void Update()
@@ -111,7 +148,7 @@ public class LevelMechanics : MonoBehaviour
 
     IEnumerator DownTime()
     {
-        yield return new WaitForSeconds(7.1f);
+        yield return new WaitForSeconds(coolDownPeriod); // <- wachten voor rain
 
         if (disableWaves == false)
         {
@@ -119,68 +156,71 @@ public class LevelMechanics : MonoBehaviour
             LevelTEXT.gameObject.GetComponent<UISmoothAppear>().PlayAnimation();
             FindObjectOfType<AudioManager>().Play("NewLevel");
 
-            if (Levels == 1)
+            if (GameManager.gameMode != 2)
             {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave1());
-                yield return new WaitForSeconds(1.5f);
-                GetComponent<MoneyMechanics>().spawnItems = false;
-                player.GetComponent<Player>().movementEnabled = false;
-                player.GetComponent<Player>().buildingEnabled = false;
-                GetComponent<TileMechanics>().enableMouseOverTileMaterial = false;
-                yield return new WaitForSeconds(21);
-                GetComponent<MoneyMechanics>().spawnItems = true;
-                player.GetComponent<Player>().movementEnabled = true;
-                player.GetComponent<Player>().buildingEnabled = true;
-                GetComponent<TileMechanics>().enableMouseOverTileMaterial = true;
+                if (Levels == 1)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave1());
+                    yield return new WaitForSeconds(1.5f);
+                    GetComponent<MoneyMechanics>().spawnItems = false;
+                    player.GetComponent<Player>().movementEnabled = false;
+                    player.GetComponent<Player>().buildingEnabled = false;
+                    GetComponent<TileMechanics>().enableMouseOverTileMaterial = false;
+                    yield return new WaitForSeconds(21);
+                    GetComponent<MoneyMechanics>().spawnItems = true;
+                    player.GetComponent<Player>().movementEnabled = true;
+                    player.GetComponent<Player>().buildingEnabled = true;
+                    GetComponent<TileMechanics>().enableMouseOverTileMaterial = true;
+                }
+
+                if (Levels == 2)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave2());
+                }
+
+                if (Levels == 3)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave3());
+                }
+
+                if (Levels == 4)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave4());
+                }
+
+                if (Levels == 5)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave5());
+                }
+
+                if (Levels == 6)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave6());
+                }
+
+                if (Levels == 7)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave7());
+                }
+
+                if (Levels == 8)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave8());
+                }
+
+                if (Levels == 9)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave9());
+                }
+
+                if (Levels >= 10)
+                {
+                    StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave10());
+                }
             }
 
-            if (Levels == 2)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave2());
-            }
 
-            if (Levels == 3)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave3());
-            }
-
-            if (Levels == 4)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave4());
-            }
-
-            if (Levels == 5)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave5());
-            }
-
-            if (Levels == 6)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave6());
-            }
-
-            if (Levels == 7)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave7());
-            }
-
-            if (Levels == 8)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave8());
-            }
-
-            if (Levels == 9)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave9());
-            }
-
-            if (Levels >= 10)
-            {
-                StartCoroutine(GetComponent<DialogueMechanics>().StartDialogueAfterWave10());
-            }
-
-
-            yield return new WaitForSeconds(Downtime + (downTimeBonusLengthMultiplier * Levels));
+            yield return new WaitForSeconds(downTime + (downTimeBonusLengthMultiplier * Levels));
             FindObjectOfType<AudioManager>().Play("NewLevel");
             //speel animatie af hier!
             //reduce time between rains
